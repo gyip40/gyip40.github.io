@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gloria Yip · Portfolio</title>
+<meta name="description" content="Gloria Yip — Computer Science and Applied Math & Statistics student at Stony Brook University.">
+<link rel="icon" id="favicon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Nunito:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<script>
+  // set theme before first paint (light is the default)
+  (function(){
+    var t = 'light';
+    try { var s = localStorage.getItem('theme'); if (s === 'dark' || s === 'light') t = s; } catch(e){}
+    document.documentElement.dataset.theme = t;
+    document.documentElement.classList.add('js');
+  })();
+</script>
+<style>
+  :root{
+    --bg:#E8FAD9;
+    --blob:#FFE6F1;
+    --blob2:#FFE6F1;
+    --win-shadow:#4D6B3A;
+    --surface:#FFF7F7;
+    --surface-a:rgba(255,247,247,.9);
+    --surface-2:#FFE6F1;
+    --ink:#4D6B3A;
+    --muted:#587343;
+    --accent:#c4527f;
+    --line:rgba(77,107,58,.28);
+    --btn:#4D6B3A;
+    --btn-ink:#FFF7F7;
+    --nav:#FFF7F7;
+    --nav-active:#FFE6F1;
+    --hover:#FFE6F1;
+    --serif:'Fraunces',Georgia,serif;
+    --sans:'Nunito',system-ui,sans-serif;
+    --pix:'Silkscreen','Courier New',monospace;
+  }
+  [data-theme="dark"]{
+    --bg:#0b0d0b;
+    --blob:#2a1220;
+    --blob2:#0f2217;
+    --surface:#151815;
+    --surface-a:rgba(21,24,21,.92);
+    --surface-2:#241a20;
+    --ink:#FFE6F1;
+    --muted:#c7b3bd;
+    --accent:#ff9fc3;
+    --line:rgba(255,230,241,.26);
+    --btn:#ff9fc3;
+    --btn-ink:#1a0d13;
+    --nav:#151815;
+    --nav-active:#2a1822;
+    --hover:rgba(255,230,241,.12);
+    --win-shadow:rgba(255,159,195,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:96px}
+  body{
+    font-family:var(--sans);color:var(--ink);line-height:1.7;font-size:1.02rem;
+    background:
+      radial-gradient(900px 520px at 90% -5%,var(--blob) 0%,transparent 65%),
+      radial-gradient(800px 520px at -5% 55%,var(--blob2) 0%,transparent 65%),
+      var(--bg);
+    background-attachment:fixed;overflow-x:hidden;transition:background-color .4s,color .4s;
+  }
+  #bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+  #trail{position:fixed;inset:0;width:100vw;height:100vh;z-index:9999;pointer-events:none}
+  #cur{position:fixed;inset:0;width:100vw;height:100vh;z-index:10000;pointer-events:none}
+  main,footer{position:relative;z-index:1}
+  a{color:inherit;text-decoration:none}
+  /* small side margins (about 4% of the screen, at least 20px) so content fills the width */
+  .wrap{width:min(1240px,calc(100% - 2*max(20px,4vw)));margin:0 auto;padding:0}
+  .label{font-family:var(--pix);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+  em{font-style:italic;color:var(--accent)}
+
+  /* ---------- NAV (floating pill) ---------- */
+  nav{position:fixed;top:14px;left:0;right:0;z-index:50;display:flex;justify-content:center;padding:0 12px;pointer-events:none}
+  .pillnav{pointer-events:auto;display:flex;align-items:center;gap:6px;background:var(--nav);border:2px solid var(--ink);border-radius:999px;padding:6px 6px 6px 16px;box-shadow:4px 4px 0 var(--line);max-width:100%;transition:background .4s}
+  .brand{display:flex;align-items:center;gap:8px;font-family:var(--pix);font-size:.8rem;letter-spacing:.06em;padding-right:8px;white-space:nowrap}
+  .navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0}
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a{white-space:nowrap;font-size:.86rem;font-weight:700;padding:8px 13px;border-radius:999px;transition:background .2s}
+  .navlinks a:hover{background:var(--hover)}
+  .navlinks a.active{background:var(--nav-active)}
+  .tbtn,.rbtn{flex:none;display:inline-flex;align-items:center;gap:8px;font:700 .82rem var(--sans);border-radius:999px;padding:8px 14px;border:2px solid var(--ink);color:var(--ink);background:var(--surface-2);transition:transform .15s}
+  [data-theme="dark"] .tbtn{background:var(--surface-2)}
+  .tbtn:hover,.rbtn:hover{transform:translateY(-2px)}
+  .tbtn svg{display:block}
+  .rbtn{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+  [data-theme="dark"] .rbtn{border-color:var(--ink)}
+
+  /* ---------- SHARED ---------- */
+  section{padding:60px 0;position:relative}
+  .sh{margin-bottom:34px}
+  #about{padding-bottom:12px}
+  .sh .num{display:inline-block;font-family:var(--pix);font-size:.78rem;background:var(--surface-2);border:2px solid var(--ink);border-radius:8px;padding:3px 10px;margin-right:10px;box-shadow:3px 3px 0 var(--line)}
+  .sh h2{font-family:var(--serif);font-weight:600;font-size:clamp(2.2rem,5vw,3.5rem);line-height:1.1;margin-top:18px;letter-spacing:-.01em}
+  .card{background:var(--surface-a);border:2px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--line);transition:transform .25s,box-shadow .25s,background .4s}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:var(--btn);color:var(--btn-ink);border:2px solid var(--ink);padding:13px 28px;border-radius:12px;font:700 .95rem var(--sans);box-shadow:4px 4px 0 var(--line);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--line)}
+  .btn.ghost{background:var(--surface-2);color:var(--ink)}
+  .js .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .js .reveal.in{opacity:1;transform:none}
+
+  /* ---------- 01 BIO ---------- */
+  #bio{min-height:86vh;display:flex;align-items:center;padding:120px 0 30px}
+  .center{text-align:center;display:flex;flex-direction:column;align-items:center}
+  .arch{position:relative;width:220px;aspect-ratio:4/5;border-radius:999px 999px 22px 22px;overflow:hidden;border:3px solid var(--ink);background:var(--surface-2);box-shadow:7px 7px 0 var(--line);margin-bottom:34px}
+  .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .arch .ph{position:absolute;inset:0;display:grid;place-items:center}
+  .arch .slides{position:absolute;inset:0}
+  .arch .slides img{opacity:0;transition:opacity .9s ease}
+  .arch .slides img.on{opacity:1}
+  .arch .dots{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:8px;z-index:2}
+  .arch .dots button{width:10px;height:10px;padding:0;border:2px solid var(--ink);background:var(--surface)}
+  .arch .dots button.on{background:var(--accent)}
+  #carousel.multi{cursor:pointer}
+  #bio .label{color:var(--muted)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(3.4rem,10vw,7rem);line-height:1;letter-spacing:-.02em;margin:18px 0 14px}
+  .sub{font-family:var(--serif);font-style:italic;font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--accent);margin-bottom:0px}
+  .bio-text{max-width:760px;color:var(--muted);font-size:1.08rem}
+  .cta{display:flex;gap:16px;margin-top:34px;flex-wrap:wrap;justify-content:center}
+
+  /* ---------- 01 ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:40px;align-items:start}
+  .about p{color:var(--muted);margin-bottom:20px;font-size:1.05rem}
+  .about p strong{color:var(--ink);font-weight:700}
+  .stickers{display:grid;gap:22px}
+  .sticker{padding:24px 26px}
+  .sticker:nth-child(1){transform:rotate(-1.2deg)}
+  .sticker:nth-child(2){transform:rotate(1deg);background:var(--surface-2)}
+  .sticker:nth-child(3){transform:rotate(-.6deg)}
+  .sticker:hover{transform:rotate(0) translateY(-3px)}
+  .sticker .label{color:var(--accent);display:block;margin-bottom:10px}
+  .sticker h3{font-family:var(--serif);font-weight:600;font-size:1.3rem;line-height:1.25;margin-bottom:6px}
+  .sticker p,.sticker li{font-size:.93rem;margin:0;color:var(--ink)}
+  .sticker ul{list-style:none}
+  .sticker li::before{content:"✿ ";color:var(--accent)}
+
+  /* ---------- 01 SKILLS (bento) ---------- */
+  .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
+  .sk{padding:26px 28px}
+  .sk:nth-child(-n+3){grid-column:span 2}
+  .sk:nth-child(n+4){grid-column:span 3}
+  .sk:nth-child(odd){background:var(--surface-a)}
+  .sk:nth-child(even){background:var(--surface-2)}
+  .sk:hover{transform:translateY(-4px)}
+  .sk .label{display:block;color:var(--accent);margin-bottom:16px}
+  .items{display:flex;flex-wrap:wrap;gap:9px}
+  .items span{font-size:.88rem;font-weight:600;padding:5px 13px;border-radius:8px;border:2px solid var(--ink);background:var(--surface);transition:transform .15s}
+  [data-theme="dark"] .items span{background:#0b0d0b}
+  .items span:hover{transform:translateY(-2px) rotate(-1.5deg)}
+
+  /* ---------- 03 EXPERIENCE (timeline) ---------- */
+  .timeline{position:relative;padding-left:56px}
+  .timeline::before{content:"";position:absolute;left:19px;top:10px;bottom:10px;width:4px;background:repeating-linear-gradient(to bottom,var(--ink) 0 8px,transparent 8px 16px);opacity:.4}
+  .xp{position:relative;padding:28px 34px;margin-bottom:28px}
+  .xp:hover{transform:translateX(6px)}
+  .xp .node{position:absolute;left:-56px;top:26px;width:42px;height:38px;display:grid;place-items:center;background:var(--bg);border-radius:10px}
+  .xp .when{font-family:var(--pix);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .xp h3{font-family:var(--serif);font-weight:600;font-size:1.45rem;line-height:1.25;margin:8px 0 2px}
+  .xp .org{font-weight:700;color:var(--muted);font-size:.95rem;margin-bottom:14px}
+  .xp ul{list-style:none;color:var(--muted);font-size:.97rem}
+  .xp li{padding-left:22px;position:relative;margin-bottom:8px}
+  .xp li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;background:var(--accent)}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .tag{font-family:var(--pix);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border:2px solid var(--ink);border-radius:6px;background:var(--surface-2)}
+  [data-theme="dark"] .tag{background:#0b0d0b}
+
+  /* ---------- 04 PROJECTS (retro windows) ---------- */
+  .proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:34px}
+  .win{border:2px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--surface-a);box-shadow:7px 7px 0 var(--win-shadow);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column}
+  .win:nth-child(1){transform:rotate(-.7deg)}
+  .win:nth-child(2){transform:rotate(.7deg)}
+  .win:hover{transform:rotate(0) translate(-3px,-3px);box-shadow:10px 10px 0 var(--win-shadow)}
+  .bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface-2);border-bottom:2px solid var(--ink)}
+  .bar i{width:11px;height:11px;border:2px solid var(--ink);background:var(--surface);display:block}
+  .bar span{margin-left:8px;font-family:var(--pix);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+  .win-body{padding:28px 30px 30px;display:flex;flex-direction:column;flex:1}
+  .win-body .tags{margin:0 0 18px}
+  .win h3{font-family:var(--serif);font-weight:600;font-size:1.55rem;line-height:1.2;margin-bottom:6px}
+  .win .date{font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:16px}
+  .win p{color:var(--muted);font-size:.98rem;margin-bottom:12px}
+  .win .links2{margin-top:auto;padding-top:18px;display:flex;gap:14px;flex-wrap:wrap}
+  .win .links2 a{font:700 .82rem var(--sans);padding:8px 16px;border:2px solid var(--ink);border-radius:8px;background:var(--btn);color:var(--btn-ink);transition:transform .15s}
+  .win .links2 a.alt{background:var(--surface-2);color:var(--ink)}
+  .win .links2 a:hover{transform:translateY(-2px)}
+
+  /* ---------- 05 CONTACT ---------- */
+  .contact-card{margin:0 auto;padding:40px}
+  .contact-card > p{color:var(--muted);margin-bottom:26px;font-size:1.05rem}
+  .clinks{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+  .clinks a{flex:1 1 200px;display:flex;flex-direction:column;gap:2px;padding:14px 18px;border:2px solid var(--ink);border-radius:12px;background:var(--surface-2);transition:transform .15s}
+  .clinks a:hover{transform:translateY(-3px) rotate(-.6deg)}
+  .clinks small{font-family:var(--pix);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .clinks b{font-size:.92rem;font-weight:700;word-break:break-all}
+  form{display:grid;gap:16px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  label{display:block;font-family:var(--pix);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  input,textarea{width:100%;background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:12px 14px;font:inherit;transition:box-shadow .2s}
+  [data-theme="dark"] input,[data-theme="dark"] textarea{background:#0b0d0b}
+  input::placeholder,textarea::placeholder{color:var(--muted);opacity:.7}
+  input:focus,textarea:focus{outline:0;box-shadow:4px 4px 0 var(--accent)}
+  textarea{min-height:130px;resize:vertical}
+  form .btn{justify-self:start;cursor:pointer}
+  footer{padding:40px 0 50px;text-align:center;color:var(--muted);font-size:.88rem}
+
+  @media (max-width:900px){
+    .about-grid{grid-template-columns:1fr;gap:40px}
+    .bento{grid-template-columns:1fr}
+    .sk:nth-child(n){grid-column:auto}
+    .proj-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:720px){
+    section{padding:44px 0}
+    .brand span,.rbtn,.tbtn .tl{display:none}
+    .pillnav{padding-left:8px}
+    .row{grid-template-columns:1fr}
+    .timeline{padding-left:44px}
+    .timeline::before{left:13px}
+    .xp .node{left:-44px;width:34px}
+    .xp{padding:24px 22px}
+    .contact-card{padding:26px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .js .reveal{opacity:1;transform:none;transition:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="trail" aria-hidden="true"></canvas>
+<canvas id="cur" aria-hidden="true"></canvas>
+
+<nav aria-label="Main">
+  <div class="pillnav">
+    <a href="#bio" class="brand"><span id="logoFlower"></span><span>GY</span></a>
+    <div class="navlinks">
+      <a href="#bio">Bio</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="tbtn" id="theme" type="button" aria-pressed="false" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <span id="themeIcon"></span><span class="tl" id="themeLabel">Dark</span>
+    </button>
+    <a class="rbtn" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
+</nav>
+
+<main>
+  <!-- 01 · SHORT BIO -->
+  <section id="bio">
+    <div class="wrap center">
+      <!-- Photo carousel: put image1 and image2 (jpg, png, webp...) in the same folder as this file -->
+      <div class="arch reveal" id="carousel" role="group" aria-roledescription="carousel" aria-label="Photos of Gloria">
+        <div class="ph"><div id="flowerBig"></div></div>
+        <div class="slides"></div>
+        <div class="dots"></div>
+      </div>
+      <p class="label">Stony Brook University · Class of 2028</p>
+      <h1>Gloria <em>Yip</em></h1>
+      <p class="sub">computer science &amp; applied math + statistics</p>
+      <p class="bio-text">
+        Nice to meet you! I'm Gloria and I study Computer Science and Applied Math &amp; Statistics at Stony Brook. I like building
+        software and machine learning projects that are actually useful in everyday life, from promoting sustainable environment practices
+        to classifying medical images to applications in fintech.
+      </p>
+      <div class="cta">
+        <a href="#projects" class="btn">See my work</a>
+        <a href="#contact" class="btn ghost">Say hello</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 · ABOUT ME -->
+  <section id="about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div>
+        <header class="sh reveal">
+          <span class="num">01</span><span class="label">About me</span>
+          <h2>A little more <em>about me</em></h2>
+        </header>
+        <div class="about reveal">
+          <p>
+            I'm a <strong>Computer Science and Applied Math &amp; Statistics</strong> student at
+            Stony Brook University with a minor in <strong>Linguistics</strong>, interested in the intersection between technology and
+            the humanities in fields like AI and NLP. I'm currently pursuing a specialization in Artificial Intelligence and Data Science.
+          </p>
+          <p>
+            I'm drawn to projects that sit between code and the real world: a
+            <strong>ResNet-50 classifier</strong> that spots leukemia cells with explainable
+            heatmaps, a <strong>blockchain loan-verification platform</strong> pitched to
+            Broadridge executives, and <strong>access-control logic</strong> for a volunteer
+            platform at ReWild Long Island.
+          </p>
+          <p>
+            I love mentoring: I've previously served as an <strong>Undergraduate TA</strong> for CSE 150 (Foundations of
+            Computer Science), where I taught 30+ students to instill good logic and mathematical practices. On campus, I am part of Stony Brook's
+            Women in Computer Science (WiCS) E-Board as the <strong>Event Committee Chair</strong>, where I oversee all events held
+            for the 2026-2027 school year, including a speaker panel with GEICO, a full-day networking convention with women in the tech field,
+            and our annual hackathon, HopperHacks. As an Event Committee Chair, I also manage the WiCS Mentorship Program, which pairs underclassmen
+            with helpful mentors in academic, social, and professional matters. Additionally, I am part of the Mahjong Club, where my role as the
+            <strong>Vice-President</strong> is to help with logistics and serve as the connection between members and club leaders.
+          </p>
+        </div>
+        </div><!-- /left column: header + text -->
+        <aside class="stickers reveal">
+          <div class="card sticker">
+            <span class="label">Education</span>
+            <h3>Stony Brook University</h3>
+            <p>B.S. Computer Science and Applied Math &amp; Statistics, Minor in Linguistics</p>
+            <p>Expected May 2028  ·  GPA: 3.81</p>
+          </div>
+          <div class="card sticker">
+            <span class="label">Honors &amp; awards</span>
+            <ul>
+              <li>Honors College  ·  Honors in Computer Science</li>
+              <li>Presidential Scholarship (2024–28)</li>
+              <li>General Engineering Scholarship (2025–26)</li>
+              <li>Dean's List (2024–26)</li>
+            </ul>
+          </div>
+          <div class="card sticker">
+            <span class="label">Leadership</span>
+            <ul>
+              <li>Women in Computer Science - Event Committee Chair</li>
+              <li>Mahjong Club - Vice-President</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · TECHNICAL SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <header class="sh reveal">
+        <span class="num">02</span><span class="label">Technical skills</span>
+        <h2>What I <em>work with</em></h2>
+      </header>
+      <div class="bento reveal">
+        <div class="card sk"><span class="label">Languages</span>
+          <div class="items"><span>Java</span><span>Python</span><span>C</span><span>JavaScript</span><span>HTML</span><span>SQL</span></div></div>
+        <div class="card sk"><span class="label">Frameworks / Libraries</span>
+          <div class="items"><span>React</span><span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>Matplotlib</span><span>Seaborn</span></div></div>
+        <div class="card sk"><span class="label">Tools &amp; Platforms</span>
+          <div class="items"><span>Git</span><span>GitHub</span><span>Microsoft Office Suite</span><span>Google Workspace</span><span>Adobe Suite</span><span>Blender</span></div></div>
+        <div class="card sk"><span class="label">Certifications</span>
+          <div class="items"><span>Break Through Tech – Machine Learning Foundations</span><span>AI4ALL Ignite Accelerator</span></div></div>
+        <div class="card sk"><span class="label">Relevant coursework</span>
+          <div class="items"><span>Data Structures</span><span>Computer Systems</span><span>Theory of Computation</span><span>Analysis of Algorithms</span><span>Fundamentals of Software Development</span><span>Artificial Intelligence</span><span>Machine Learning</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <header class="sh reveal">
+        <span class="num">03</span><span class="label">Experience</span>
+        <h2>Where I've <em>worked</em></h2>
+      </header>
+      <div class="timeline">
+        <article class="card xp reveal">
+          <span class="node"></span>
+          <div class="when">Aug 2026 – Present · Stony Brook, NY</div>
+          <h3>Software Development Intern</h3>
+          <div class="org">ReWild Long Island</div>
+          <ul>
+            <li>Develop Python-based logic for managing user roles and permissions within the Volunteer Platform's shared Foundation layer, supporting access control across multiple applications</li>
+            <li>Design and implement UI improvements to streamline volunteer access to chapter events</li>
+            <li>Test and debug backend interface functionality for youth waiver processing and admin access controls</li>
+          </ul>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Access control</span><span class="tag">UI</span><span class="tag">Debugging</span></div>
+        </article>
+
+        <article class="card xp reveal">
+          <span class="node"></span>
+          <div class="when">Mar 2026 – Present · Stony Brook, NY</div>
+          <h3>Classroom Technology Support Apprentice</h3>
+          <div class="org">Division of Information Technology · Stony Brook University</div>
+          <ul>
+            <li>Manage and troubleshoot classroom technology, including handheld and lavalier microphones and AV/media systems</li>
+            <li>Shadow support staff to learn troubleshooting and customer service in person, over the phone, and via remote tech support for faculty and staff</li>
+            <li>Document technical issues as tickets in TeamDynamix to keep operations and events running smoothly</li>
+          </ul>
+          <div class="tags"><span class="tag">AV / Media</span><span class="tag">TeamDynamix</span><span class="tag">Remote support</span></div>
+        </article>
+
+        <article class="card xp reveal">
+          <span class="node"></span>
+          <div class="when">Aug – Dec 2025 · Stony Brook, NY</div>
+          <h3>Undergraduate Teaching Assistant</h3>
+          <div class="org">College of Engineering and Applied Sciences · Stony Brook University</div>
+          <ul>
+            <li>Assisted in teaching CSE 150: Honors Foundations of Computer Science with Professor Sekar, closely mentoring 30+ students and bringing the class average up 10% from previous years</li>
+            <li>Held weekly office hours to help students review lectures, complete homework, and prepare for exams</li>
+          </ul>
+          <div class="tags"><span class="tag">Teaching</span><span class="tag">Mentorship</span><span class="tag">CSE 150</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <header class="sh reveal">
+        <span class="num">04</span><span class="label">Projects</span>
+        <h2>Things I've <em>built</em></h2>
+      </header>
+      <div class="proj-grid">
+        <article class="win reveal">
+          <div class="bar"><i></i><i></i><i></i><span>project_01</span></div>
+          <div class="win-body">
+            <div class="tags"><span class="tag">Solidity</span><span class="tag">HTML</span><span class="tag">JavaScript</span></div>
+            <h3>Tokenized Loan Reverification Platform</h3>
+            <div class="date">Aug 2025 – May 2026</div>
+            <p>Collaborated with Broadridge Financial Solutions to draft a new proposal for using blockchain and smart contracts in the financial industry to automate the verification of loans.</p>
+            <p>Created a full-stack web app demo to present in front of Broadridge executives.</p>
+            <div class="links2">
+              <a href="https://vericore-prototype.vercel.app" target="_blank" rel="noopener">Live project ↗</a>
+              <a class="alt" href="https://github.com/jackcodesalot/Tokenization-of-CDOs" target="_blank" rel="noopener">GitHub ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="win reveal">
+          <div class="bar"><i></i><i></i><i></i><span>project_02</span></div>
+          <div class="win-body">
+            <div class="tags"><span class="tag">TypeScript</span><span class="tag">CSS</span><span class="tag">Python</span><span class="tag">Docker</span></div>
+            <h3>Acute Lymphoblastic Leukemia (ALL) Classification Model</h3>
+            <div class="date">Sept 2025 – Mar 2026</div>
+            <p>Worked in a group of five to develop and train a ResNet-50 CNN model to classify ALL blood cell images, achieving 98% validation accuracy through iterative optimization and model tuning.</p>
+            <p>Created a full-stack web app to showcase the model with explainable Grad-CAM heatmaps.</p>
+            <div class="links2">
+              <a href="https://ai4all-project.vercel.app" target="_blank" rel="noopener">Live project ↗</a>
+              <a class="alt" href="https://github.com/akeight/ai4all-project" target="_blank" rel="noopener">GitHub ↗</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · CONTACT -->
+  <section id="contact">
+    <div class="wrap">
+      <header class="sh reveal">
+        <span class="num">05</span><span class="label">Contact</span>
+        <h2>Let's <em>connect</em></h2>
+      </header>
+      <div class="card contact-card reveal">
+        <p>Whether you have a role, want to collaborate, or just want to say hi, feel free to reach out!</p>
+        <div class="clinks">
+          <a href="mailto:gyip.college@gmail.com"><small>Email</small><b>gyip.college@gmail.com</b></a>
+          <a href="https://www.linkedin.com/in/gloria-yip-cs" target="_blank" rel="noopener"><small>LinkedIn</small><b>gloria-yip-cs</b></a>
+          <a href="https://github.com/gyip40" target="_blank" rel="noopener"><small>GitHub</small><b>gyip40</b></a>
+        </div>
+        <!-- Opens the visitor's email app with the message filled in (no backend needed on GitHub Pages) -->
+        <form id="contactForm">
+          <div class="row">
+            <div><label for="name">Name</label><input id="name" required placeholder="Your name"></div>
+            <div><label for="email">Email</label><input id="email" type="email" required placeholder="your@email.com"></div>
+          </div>
+          <div><label for="subject">Subject</label><input id="subject" placeholder="Internship / Collab / Just saying hi"></div>
+          <div><label for="msg">Message</label><textarea id="msg" required placeholder="Tell me about it…"></textarea></div>
+          <button class="btn" type="submit">Send message →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© <span id="yr"></span> Gloria Yip · made with pixels &amp; petals ✿</footer>
+
+<script>
+/* ---------- pixel-art helper ---------- */
+function pixelSVG(grid, palette, cell){
+  const h = grid.length, w = grid[0].length;
+  let r = '';
+  grid.forEach((row, y) => [...row].forEach((ch, x) => {
+    if (palette[ch]) r += `<rect x='${x*cell}' y='${y*cell}' width='${cell}' height='${cell}' fill='${palette[ch]}'/>`;
+  }));
+  return `<svg xmlns='http://www.w3.org/2000/svg' width='${w*cell}' height='${h*cell}' shape-rendering='crispEdges'>${r}</svg>`;
+}
+const SAKURA = [
+  "...PP.PP...","..PPPPPPP..",".PPPPPPPPP.","PPPPPYPPPPP",".PPPYYYPPP.",
+  "PPPPPYPPPPP",".PPPPPPPPP.","..PPPPPPP..","...PP.PP..."
+];
+const DAISY = [
+  "...P...",".P.P.P.","..PPP..","PPPYPPP","..PPP..",".P.P.P.","...P..."
+];
+const MOON = ["...####..","..###....",".###.....",".###.....",".###.....",".###.....","..###....","...####.."];
+const SUN  = ["....S....",".S..S..S.","..SSSSS..","..SSSSS..","S.SSSSS.S","..SSSSS..","..SSSSS..",".S..S..S.","....S...."];
+const FL_PAL = {P:'#f4a6bd', Y:'#c4527f'};
+
+/* ---------- pixel cursor (smaller, theme-aware) ---------- */
+// symmetric, upright arrow: straight stem, no tilt (hotspot = the tip)
+const ARROW = [
+  "....#....","...#o#...","..#ooo#..",".#ooooo#.","#ooooooo#",
+  "####o####","...#o#...","...#o#...","...#o#...","...#o#...","...###..."
+];
+const cursorStyle = document.createElement('style');
+document.head.appendChild(cursorStyle);
+function applyCursor(){
+  // once the direction-aware cursor is running, hide the native one (keep the text caret in form fields)
+  if (window.__customCursor){
+    cursorStyle.textContent = '*{cursor:none!important}input,textarea{cursor:text!important}';
+    return;
+  }
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const outline = dark ? '#FFF7F7' : '#4D6B3A';
+  const fill    = '#FFB3D0';
+  const hover   = dark ? '#E8FAD9' : '#E8789F';
+  // 1x image plus a 2x one so the pixels stay sharp on high-DPI screens
+  const decl = (f, fb) => {
+    const u = cell => 'url("data:image/svg+xml,' + encodeURIComponent(pixelSVG(ARROW, {'#':outline,'o':f}, cell)) + '")';
+    const a = u(2), b = u(4);
+    return `cursor:${a} 9 1,${fb}!important;` +
+           `cursor:-webkit-image-set(${a} 1x,${b} 2x) 9 1,${fb}!important;` +
+           `cursor:image-set(${a} 1x,${b} 2x) 9 1,${fb}!important;`;
+  };
+  cursorStyle.textContent =
+    `*{${decl(fill,'auto')}}
+     a,a *,button,button *,.btn{${decl(hover,'pointer')}}`;
+}
+
+/* ---------- theme toggle ---------- */
+(function(){
+  const root = document.documentElement;
+  const btn = document.getElementById('theme');
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  function paint(){
+    const dark = root.dataset.theme === 'dark';
+    btn.setAttribute('aria-pressed', dark);
+    icon.innerHTML = dark ? pixelSVG(SUN, {S:'currentColor'}, 2) : pixelSVG(MOON, {'#':'currentColor'}, 2);
+    label.textContent = dark ? 'Light' : 'Dark';
+    applyCursor();
+  }
+  btn.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch(e){}
+    paint();
+  });
+  paint();
+})();
+
+/* ---------- logo / favicon / hero flower ---------- */
+document.getElementById('favicon').href = 'data:image/svg+xml,' + encodeURIComponent(pixelSVG(SAKURA, FL_PAL, 4));
+document.getElementById('logoFlower').innerHTML = pixelSVG(SAKURA, FL_PAL, 2);
+document.getElementById('flowerBig').innerHTML = pixelSVG(SAKURA, FL_PAL, 10);
+document.querySelectorAll('.node').forEach(n => n.innerHTML = pixelSVG(SAKURA, FL_PAL, 3));
+
+/* ---------- slow-falling flowers, gently nudged by the cursor ---------- */
+(function(){
+  const c = document.getElementById('bg'), ctx = c.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SHADES = [['#f4a6bd','#c4527f'],['#ee8aa9','#fff7f7'],['#f9c9d6','#e8a23c'],['#fff7f7','#e8789f']];
+  const sprites = [];
+  function makeSprite(grid, pal, cell){
+    const cv = document.createElement('canvas');
+    cv.width = grid[0].length*cell; cv.height = grid.length*cell;
+    const x = cv.getContext('2d');
+    grid.forEach((row,y) => [...row].forEach((ch,i) => {
+      if (ch === '.') return;
+      x.fillStyle = ch === 'Y' ? pal[1] : pal[0];
+      x.fillRect(i*cell, y*cell, cell, cell);
+    }));
+    cv.cell = cell;
+    return cv;
+  }
+  [SAKURA, DAISY].forEach(g => SHADES.forEach(p => [2,3,4].forEach(cell => sprites.push(makeSprite(g,p,cell)))));
+
+  let W, H, dpr, flowers = [], last = 0;
+  const mouse = {x:-999, y:-999};
+  const rnd = (a,b) => a + Math.random()*(b-a);
+
+  function flower(initial){
+    const sp = sprites[Math.floor(Math.random()*sprites.length)];
+    return { sp, x:rnd(-20,W), y: initial ? rnd(-30,H) : rnd(-140,-30),
+      vy: .10 + sp.cell*.035 + rnd(0,.10),        // slow fall
+      ph: rnd(0,6.28), sway: rnd(.15,.4), ix:0, iy:0 };
+  }
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    c.width = W*dpr; c.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n = Math.round(Math.min(34, Math.max(14, W*H/42000)));
+    while (flowers.length < n) flowers.push(flower(true));
+    flowers.length = Math.min(flowers.length, n);
+    if (reduce) draw();
+  }
+  addEventListener('resize', resize);
+  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  document.addEventListener('pointerleave', () => { mouse.x = mouse.y = -999; });
+
+  function step(dt){
+    const R = 120;
+    for (const f of flowers){
+      const cx = f.x + f.sp.width/2, cy = f.y + f.sp.height/2;
+      const dx = cx - mouse.x, dy = cy - mouse.y, d = Math.hypot(dx,dy) || 1;
+      if (d < R){                                  // soft, indirect nudge
+        const k = Math.pow(1 - d/R, 2) * .22;
+        f.ix += dx/d*k; f.iy += dy/d*k*.5;
+      }
+      f.ix *= .96; f.iy *= .96;
+      f.ph += .012*dt;
+      f.x += (Math.sin(f.ph)*f.sway + f.ix)*dt;
+      f.y += (f.vy + f.iy)*dt;
+      if (f.y > H + 30 || f.x < -60 || f.x > W + 60) Object.assign(f, flower(false));
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.imageSmoothingEnabled = false;
+    ctx.globalAlpha = .92;
+    for (const f of flowers) ctx.drawImage(f.sp, Math.round(f.x), Math.round(f.y));
+    ctx.globalAlpha = 1;
+  }
+  function loop(t){
+    const dt = Math.min(2.5, (t - last)/16.67 || 1); last = t;
+    step(dt); draw(); requestAnimationFrame(loop);
+  }
+  resize();
+  if (!reduce) requestAnimationFrame(loop);
+})();
+
+/* ---------- tiny flower trail behind the cursor ---------- */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.getElementById('trail'), ctx = c.getContext('2d');
+  const FL_A = [".P.", "PYP", ".P."];                                   // tiny
+  const FL_B = ["..P..", ".PPP.", "PPYPP", ".PPP.", "..P.."];           // small
+  const cache = {};
+  function sprites(theme){
+    if (cache[theme]) return cache[theme];
+    const dark = theme === 'dark';
+    const petals = dark ? ['#FFB3D0','#FFE6F1','#ff8fb8'] : ['#f4a6bd','#ee8aa9','#ffc2d6'];
+    const center = dark ? '#E8FAD9' : '#4D6B3A';                        // palette green
+    const list = [];
+    [FL_A, FL_B].forEach(g => petals.forEach(p => {
+      const cell = 2, cv = document.createElement('canvas');
+      cv.width = g[0].length*cell; cv.height = g.length*cell;
+      const x = cv.getContext('2d');
+      g.forEach((row,y) => [...row].forEach((ch,i) => {
+        if (ch === '.') return;
+        x.fillStyle = ch === 'Y' ? center : p;
+        x.fillRect(i*cell, y*cell, cell, cell);
+      }));
+      list.push(cv);
+    }));
+    return cache[theme] = list;
+  }
+  let W, H, dpr, parts = [], running = false, last = 0, px = -999, py = -999;
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    c.width = W*dpr; c.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); addEventListener('resize', resize);
+
+  addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    if (Math.hypot(e.clientX-px, e.clientY-py) < 14) return;
+    px = e.clientX; py = e.clientY;
+    const list = sprites(document.documentElement.dataset.theme);
+    parts.push({ sp:list[Math.floor(Math.random()*list.length)],
+      x:px + (Math.random()*8-4), y:py + (Math.random()*8-4),
+      vx:(Math.random()-.5)*.25, vy:.15 + Math.random()*.25,
+      life:46, max:46 });
+    if (!running){ running = true; last = performance.now(); requestAnimationFrame(loop); }
+  });
+
+  function loop(t){
+    const dt = Math.min(2.5, (t-last)/16.67 || 1); last = t;
+    ctx.clearRect(0,0,W,H);
+    ctx.imageSmoothingEnabled = false;
+    for (let i = parts.length-1; i >= 0; i--){
+      const p = parts[i];
+      p.life -= dt; p.x += p.vx*dt; p.y += p.vy*dt;
+      if (p.life <= 0){ parts.splice(i,1); continue; }
+      ctx.globalAlpha = Math.min(1, p.life/p.max*1.6);
+      ctx.drawImage(p.sp, Math.round(p.x), Math.round(p.y));
+    }
+    ctx.globalAlpha = 1;
+    if (parts.length) requestAnimationFrame(loop); else running = false;
+  }
+})();
+
+/* ---------- direction-aware pixel cursor ---------- */
+// The arrow turns to face the way the mouse has been moving, then eases
+// back upright once you stop. Touch devices keep their normal behavior.
+(function(){
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const c = document.getElementById('cur'), ctx = c.getContext('2d');
+  const TIPX = 9, TIPY = 1;                        // the arrow's tip = the real click point
+  const cache = {};
+  function sprite(theme, hover){
+    const key = theme + hover;
+    if (cache[key]) return cache[key];
+    const dark = theme === 'dark';
+    const outline = dark ? '#FFF7F7' : '#4D6B3A';
+    const fill = hover ? (dark ? '#E8FAD9' : '#E8789F') : '#FFB3D0';
+    const cell = 2, cv = document.createElement('canvas');
+    cv.width = ARROW[0].length*cell; cv.height = ARROW.length*cell;
+    const x = cv.getContext('2d');
+    ARROW.forEach((row,yy) => [...row].forEach((ch,i) => {
+      if (ch === '.') return;
+      x.fillStyle = ch === '#' ? outline : fill;
+      x.fillRect(i*cell, yy*cell, cell, cell);
+    }));
+    return cache[key] = cv;
+  }
+
+  let W, H, dpr;
+  let x = -99, y = -99, lx = null, ly = null, vx = 0, vy = 0;
+  let angle = 0, target = 0, scale = 1, lastMove = 0, last = 0;
+  let visible = false, hover = false, pressed = false, running = false;
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    c.width = W*dpr; c.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); addEventListener('resize', resize);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    if (!visible) return;
+    ctx.imageSmoothingEnabled = false;
+    ctx.save();
+    ctx.translate(Math.round(x), Math.round(y));   // rotate around the tip
+    ctx.rotate(angle);
+    ctx.scale(scale, scale);
+    ctx.drawImage(sprite(document.documentElement.dataset.theme, hover), -TIPX, -TIPY);
+    ctx.restore();
+  }
+  function frame(t){
+    const dt = Math.min(2.5, (t-last)/16.67 || 1); last = t;
+    if (t - lastMove > 350) target = 0;                          // idle: ease back upright
+    const d = Math.atan2(Math.sin(target-angle), Math.cos(target-angle));   // shortest turn
+    angle += d*Math.min(1, .2*dt);
+    const ts = pressed ? .82 : 1;
+    scale += (ts - scale)*Math.min(1, .3*dt);
+    draw();
+    if (Math.abs(d) < .01 && Math.abs(scale-ts) < .01 && t - lastMove > 350){
+      angle = target; scale = ts; running = false; draw();
+    } else requestAnimationFrame(frame);
+  }
+  function kick(){ if (!running){ running = true; last = performance.now(); requestAnimationFrame(frame); } }
+
+  addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    if (!window.__customCursor){ window.__customCursor = true; applyCursor(); }
+    const el = e.target;
+    visible = !(el.closest && el.closest('input,textarea'));      // show the text caret there instead
+    hover = !!(el.closest && el.closest('a,button,.btn,[role=button]'));
+    x = e.clientX; y = e.clientY;
+    if (lx !== null){ vx = vx*.6 + (x-lx)*.4; vy = vy*.6 + (y-ly)*.4; }   // smoothed heading
+    lx = x; ly = y;
+    if (!reduce && Math.hypot(vx,vy) > 1.2) target = Math.atan2(vy, vx) + Math.PI/2;
+    lastMove = performance.now();
+    kick();
+  });
+  addEventListener('pointerdown', () => { pressed = true; kick(); });
+  addEventListener('pointerup',   () => { pressed = false; kick(); });
+  document.documentElement.addEventListener('mouseleave', () => { visible = false; lx = ly = null; vx = vy = 0; draw(); });
+})();
+
+/* ---------- photo carousel (image1 + image2 next to this file) ---------- */
+(function(){
+  const box = document.getElementById('carousel');
+  const slidesEl = box.querySelector('.slides');
+  const dotsEl = box.querySelector('.dots');
+  const ph = box.querySelector('.ph');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const names = ['image1', 'image2'];
+  // tries each extension until one loads; to skip the guessing, list exact names instead, e.g. ['image1.jpg','image2.jpg']
+  const exts = ['jpg','jpeg','png','webp','JPG','JPEG','PNG','avif','gif'];
+
+  function probe(name){
+    return new Promise(resolve => {
+      let i = 0;
+      (function next(){
+        if (i >= exts.length) return resolve(null);
+        const src = name + '.' + exts[i++];
+        const im = new Image();
+        im.onload = () => resolve(src);
+        im.onerror = next;
+        im.src = src;
+      })();
+    });
+  }
+
+  Promise.all(names.map(probe)).then(found => {
+    const srcs = found.filter(Boolean);
+    if (!srcs.length) return;                       // no photos yet: keep the flower placeholder
+    ph.style.display = 'none';
+
+    const imgs = srcs.map((src, i) => {
+      const im = document.createElement('img');
+      im.src = src;
+      im.alt = 'Photo ' + (i+1) + ' of Gloria Yip';
+      slidesEl.appendChild(im);
+      return im;
+    });
+    let idx = 0, timer = null;
+    const dots = [];
+    function show(n){
+      idx = (n + imgs.length) % imgs.length;
+      imgs.forEach((im,i) => im.classList.toggle('on', i === idx));
+      dots.forEach((d,i) => d.classList.toggle('on', i === idx));
+    }
+    function play(){
+      clearInterval(timer);
+      if (imgs.length > 1 && !reduce) timer = setInterval(() => show(idx+1), 4500);
+    }
+
+    if (imgs.length > 1){
+      box.classList.add('multi');
+      imgs.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Show photo ' + (i+1));
+        b.addEventListener('click', e => { e.stopPropagation(); show(i); play(); });
+        dotsEl.appendChild(b); dots.push(b);
+      });
+      box.addEventListener('click', () => { show(idx+1); play(); });       // click the photo to advance
+      box.addEventListener('mouseenter', () => clearInterval(timer));      // pause while hovering
+      box.addEventListener('mouseleave', play);
+    }
+    show(0); play();
+  });
+})();
+
+/* ---------- page behavior ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// highlight the nav link for the section on screen
+const navLinks = [...document.querySelectorAll('.navlinks a')];
+function setActive(id){
+  navLinks.forEach(a => {
+    const on = a.getAttribute('href') === '#' + id;
+    a.classList.toggle('active', on);
+    if (on) a.scrollIntoView({inline:'nearest', block:'nearest'});
+  });
+}
+const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), {rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('main section[id]').forEach(s => spy.observe(s));
+addEventListener('scroll', () => {
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive('contact');
+}, {passive:true});
+
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = id => document.getElementById(id).value.trim();
+  const subject = v('subject') || 'Hello from your portfolio';
+  const body = `${v('msg')}\n\n— ${v('name')} (${v('email')})`;
+  location.href = `mailto:gyip.college@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
