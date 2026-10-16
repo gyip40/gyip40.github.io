@@ -628,9 +628,9 @@ document.querySelectorAll('.node').forEach(n => n.innerHTML = pixelSVG(SAKURA, F
   function draw(){
     ctx.clearRect(0,0,W,H);
     ctx.imageSmoothingEnabled = false;
-    ctx.globalAlpha = .92;
+    ctx.globalAlpha = 0.5;
     for (const f of flowers) ctx.drawImage(f.sp, Math.round(f.x), Math.round(f.y));
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0.25;
   }
   function loop(t){
     const dt = Math.min(2.5, (t - last)/16.67 || 1); last = t;
